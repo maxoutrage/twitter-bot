@@ -23,6 +23,8 @@ class TweetStreamListener(tweepy.StreamListener):
     def __init__(self, api):
         self.api = api
         self.me = api.me()
+        favourite = 0
+        retweet = 0
 
     def on_status(self, tweet):
         # decoded = json.loads(tweet)
@@ -44,12 +46,15 @@ class TweetStreamListener(tweepy.StreamListener):
         try:
             if not tweet.favorited:
                 tweet.favorite()
+                favourite += 1
                 print("=" * 50)
+                print(f"FAV={favourite} RET={retweet}")
                 logger.info(f"FAV: {tweet.user.screen_name} {tweet.user.id}")
                 logger.info(f'FAV: {tweet.text}')
                 if tweet.user.id in RETWEETS:
                     logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
                     tweet.retweet()
+                    retweet += 1
         except Exception as e:
             logger.error("Error on fav", exc_info=True)
 
