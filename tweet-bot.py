@@ -19,7 +19,10 @@ access_token = os.environ['access_token']
 access_token_secret = os.environ['access_token_secret']
 
 
-class TweetStreamListener(tweepy.StreamListener):
+class TStream(tweepy.StreamListener):
+    favourite = 0
+    retweet = 0
+
     def __init__(self, api):
         self.api = api
         self.me = api.me()
@@ -46,25 +49,17 @@ class TweetStreamListener(tweepy.StreamListener):
         try:
             if not tweet.favorited:
                 tweet.favorite()
-                favourite += 1
+                TStream.favourite += 1
                 print("=" * 50)
-                print(f"FAV={favourite} RET={retweet}")
+                print(f"FAV={TStream.favourite} RET={TStream.retweet}")
                 logger.info(f"FAV: {tweet.user.screen_name} {tweet.user.id}")
                 logger.info(f'FAV: {tweet.text}')
                 if tweet.user.id in RETWEETS:
                     logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
                     tweet.retweet()
-                    retweet += 1
+                    TStream.retweet += 1
         except Exception as e:
             logger.error("Error on fav", exc_info=True)
-
-        # if not tweet.retweeted:
-            # Retweet, since we have not retweeted it yet
-            # try:
-            # return
-            # tweet.retweet()
-            # except Exception as e:
-            # logger.error("Error on fav and retweet", exc_info=True)
 
 
 def create_api():
@@ -94,7 +89,7 @@ def main(LIKES, RETWEETS):
     auth.set_access_token(access_token, access_token_secret)
     api = create_api()
 
-    tweets_listener = TweetStreamListener(api)
+    tweets_listener = TStream(api)
     stream = tweepy.Stream(api.auth, tweets_listener)
     while True:
         try:
@@ -102,21 +97,13 @@ def main(LIKES, RETWEETS):
         except KeyboardInterrupt:
             sys.exit()
 
-    # try:
-        # stream.filter(track=keywords, languages=["en"])
-    # except KeyboardInterrupt:
-        # sys.exit()
-
 
 if __name__ == "__main__":
     # search = input("Search for? ")
-    logger.info(f"Reading tweet files")
+    logger.info(f"Reading tweet files...")
     with open("watch-id.txt") as f:
         LIKES = f.read().splitlines()
-
-    print("Following...")
-    for f in LIKES:
-        print(f)
+        logger.info(f"loaded {len(LIKES)} profiles")
 
     with open("watch-retweet.txt") as f:
         RETWEETS = f.read().splitlines()
