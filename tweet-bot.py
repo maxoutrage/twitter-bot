@@ -54,6 +54,7 @@ class TStream(tweepy.StreamListener):
                 print(f"FAV={TStream.favourite} RET={TStream.retweet}")
                 logger.info(f"FAV: {tweet.user.screen_name} {tweet.user.id}")
                 logger.info(f'FAV: {tweet.text}')
+                logger.info(f'Possible retweets are {RETWEETS}')
                 if tweet.user.id in RETWEETS:
                     logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
                     tweet.retweet()
@@ -103,9 +104,9 @@ if __name__ == "__main__":
     logger.info(f"Reading tweet files...")
     with open("watch-id.txt") as f:
         LIKES = f.read().splitlines()
-        logger.info(f"loaded {len(LIKES)} profiles")
+        logger.info(f"loaded {len(LIKES)} profiles to fav")
 
     with open("watch-retweet.txt") as f:
         RETWEETS = f.read().splitlines()
-
+        logger.info(f'loaded {len(RETWEETS)} profile to retweet.')
     main(LIKES, RETWEETS)
