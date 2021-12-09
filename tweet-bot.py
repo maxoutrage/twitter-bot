@@ -40,26 +40,22 @@ class TStream(tweepy.StreamListener):
             # This tweet is a reply or I'm its author so, ignore it
             return
         if tweet.text.startswith('RT'):
-            # logger.info("Retweet - ignoring")
             return
-
-        # if tweet.user.id == 1367531:
-            # tweet.reply
 
         try:
             if not tweet.favorited:
                 tweet.favorite()
                 TStream.favourite += 1
-                print("=" * 50)
+                print("=" * 60)
                 print(f"FAV={TStream.favourite} RET={TStream.retweet}")
                 logger.info(f"FAV: {tweet.user.screen_name} {tweet.user.id}")
                 logger.info(f'FAV: {tweet.text}')
-                if tweet.user.id in RETWEETS:
-                    TStream.retweet += 1
-                    tweet.retweet(tweet.id)
-                    logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
+            if tweet.user.id in RETWEETS:
+                TStream.retweet += 1
+                tweet.retweet(tweet.id)
+                logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
         except Exception as e:
-            logger.error("Error on fav", exc_info=True)
+            logger.error("Error on tweepy", exc_info=True)
 
 
 def create_api():
