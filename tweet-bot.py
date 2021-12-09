@@ -50,12 +50,15 @@ class TStream(tweepy.StreamListener):
                 print(f"FAV={TStream.favourite} RET={TStream.retweet}")
                 logger.info(f"FAV: {tweet.user.screen_name} {tweet.user.id}")
                 logger.info(f'FAV: {tweet.text}')
+        except tweept.TweepError as error:
+            logger.error("FV: error becasue {error.reason}")
+        try:
             if tweet.user.id in RETWEETS:
                 TStream.retweet += 1
                 tweet.retweet(tweet.id)
                 logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
-        except Exception as e:
-            logger.error("Error on tweepy", exc_info=True)
+        except tweepy.TweepError as error:
+            logger.error('RT: error because {error.reason}')
 
 
 def create_api():
