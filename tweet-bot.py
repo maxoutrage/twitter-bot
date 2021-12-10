@@ -55,7 +55,7 @@ class TStream(tweepy.StreamListener):
         try:
             target = tweet.user.id
             for id in RETWEETS:
-                if target == id
+                if target == id:
                     TStream.retweet += 1
                     tweet.retweet(tweet.id)
                     logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
