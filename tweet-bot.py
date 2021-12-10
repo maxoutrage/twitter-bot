@@ -53,8 +53,9 @@ class TStream(tweepy.StreamListener):
         except tweepy.TweepError as error:
             logger.error("FV: error becasue {error.reason}")
         try:
+            id = tweet.user.id
             logger.info(f"user id is {tweet.user.id} retweets are {RETWEETS}")
-            if tweet.user.id in RETWEETS:
+            if id in RETWEETS:
                 TStream.retweet += 1
                 tweet.retweet(tweet.id)
                 logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
