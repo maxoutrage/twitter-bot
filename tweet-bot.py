@@ -53,12 +53,10 @@ class TStream(tweepy.StreamListener):
         except tweepy.TweepError as error:
             logger.error("FV: error becasue {error.reason}")
         try:
-            target = tweet.user.id
-            for id in RETWEETS:
-                if target == id:
-                    TStream.retweet += 1
-                    tweet.retweet(tweet.id)
-                    logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
+            if tweet.user.id in RETWEETS:
+                TStream.retweet += 1
+                tweet.retweet(tweet.id)
+                logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
             else:
                 logger.info("RT: No match")
         except tweepy.TweepError as error:
