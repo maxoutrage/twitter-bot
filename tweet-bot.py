@@ -54,8 +54,8 @@ class TStream(tweepy.StreamListener):
             logger.error("FV: error becasue {error.reason}")
         try:
             tweet.retweet()
+            TStream.retweet += 1
             if tweet.user.id in RETWEETS:
-                TStream.retweet += 1
                 logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
             else:
                 logger.info("RT: No match")
