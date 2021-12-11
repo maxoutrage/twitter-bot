@@ -54,11 +54,12 @@ class TStream(tweepy.StreamListener):
             logger.error("FV: error becasue {error.reason}")
         try:
             if not tweet.retweeted:
-                tweet.retweet()
-                TStream.retweet += 1
-                logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
-            else:
-                logger.info("RT: No match")
+                if tweet.user.id in RETWEET:
+                    tweet.retweet()
+                    TStream.retweet += 1
+                    logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
+                else:
+                    logger.info("RT: No match")
         except tweepy.TweepError as error:
             logger.error('RT: error because {error.reason}')
 
