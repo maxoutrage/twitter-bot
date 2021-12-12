@@ -53,13 +53,12 @@ class TStream(tweepy.StreamListener):
         except tweepy.TweepError as error:
             logger.error("FV: error becasue {error.reason}")
         try:
+            target = tweet.user.id
             if not tweet.retweeted:
-                if tweet.user.id in RETWEET:
+                if target in RETWEET:
                     tweet.retweet()
                     TStream.retweet += 1
                     logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
-                else:
-                    logger.info("RT: No match")
         except tweepy.TweepError as error:
             logger.error('RT: error because {error.reason}')
 
@@ -106,6 +105,6 @@ if __name__ == "__main__":
         logger.info(f"loaded {len(LIKES)} profiles to fav")
 
     with open("watch-retweet.txt") as f:
-        RETWEETS = f.read().splitlines()
-        logger.info(f'loaded {len(RETWEETS)} profile to retweet')
+        RETWEETS = [RETWEET.strip() for RETWEET in f]
+        logger.info(f'loaded {len(RETWEETS)} profile(s) to retweet')
     main(LIKES, RETWEETS)
