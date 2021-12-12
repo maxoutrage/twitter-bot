@@ -55,8 +55,8 @@ class TStream(tweepy.StreamListener):
         try:
             target = tweet.user.id
             if not tweet.retweeted:
-                if target in RETWEET:
-                    tweet.retweet()
+                if target in RETWEETS:
+                    tweet.retweet(tweet.id)
                     TStream.retweet += 1
                     logger.info(f"RT: {tweet.user.screen_name} {tweet.text}")
         except tweepy.TweepError as error:
